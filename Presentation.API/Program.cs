@@ -1,5 +1,9 @@
 
+
+using Application;
+using Infrastructure;
 namespace Presentation.API
+
 {
     public class Program
     {
@@ -13,6 +17,12 @@ namespace Presentation.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+
+            builder.Services
+                .AddInfrastructureDI()
+                .AddApplicationDI()
+                ;
 
             var app = builder.Build();
 
