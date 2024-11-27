@@ -4,16 +4,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{FD538D28-9238-45F2-A5FC-31C6D12A1C11}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{30D8506E-E237-45BD-8218-113462F5CE36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{A8BAF58E-C8D2-40F9-B9A5-C62F3566F4B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{A8BAF58E-C8D2-40F9-B9A5-C62F3566F4B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{9BB93A6C-EE0F-40CE-978B-D1424D0C7EA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{9BB93A6C-EE0F-40CE-978B-D1424D0C7EA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{636EFA48-61FA-4988-A3C7-176A5287DD7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{636EFA48-61FA-4988-A3C7-176A5287DD7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.API", "Presentation.API\Presentation.API.csproj", "{76FE2CAE-ACBE-4586-83F6-8AD626A6C551}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.API", "Presentation.API\Presentation.API.csproj", "{76FE2CAE-ACBE-4586-83F6-8AD626A6C551}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -20,7 +20,7 @@ namespace Presentation.API
 
 
             builder.Services
-                .AddInfrastructureDI()
+                .AddInfrastructureDI(builder.Configuration)
                 .AddApplicationDI()
                 ;
 
