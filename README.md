@@ -17,11 +17,12 @@ This layer includes:
 - External Service Integrations (e.g., email, logging)
 
 ### 4. **Presentation Layer**
+→ The main project contains the presentation layer and implements the ASP.NET Core web API. It should reference the **Application** and **Infrastructure** projects.
 The Presentation Layer is responsible for handling **HTTP requests** and **responses** in an ASP.NET Core Web API. It contains:
 - API Controllers
 - Middleware to manage user interactions
 - Data delivery and response formatting
-→ The main project contains the presentation layer and implements the ASP.NET Core web API. It should reference the **Application** and **Infrastructure** projects.
+
 
 ## Implementation Steps
 
@@ -64,26 +65,4 @@ In the **Presentation** (Web API) project:
 Here’s how the solution structure looks for a Clean Architecture implementation in ASP.NET Core Web API:
 ![Alt text](https://miro.medium.com/v2/resize:fit:500/1*sura91gPMoCjPNvZWsAO_g.png)
 
-## Key Layers
 
-### Application Layer
-
-- **IServices Interface**: Defines the contract for application services, promoting loose coupling and enabling different implementations.
-- **Services**: Concrete implementations of the `IServices` interface, which contain the business logic and orchestrate use cases.
-- **DependencyInjection**: This class manages the registration and resolution of services and repositories, facilitating **Dependency Injection** (DI) throughout the application.
-- **IUnitOfWork**: An interface that manages transactions across multiple repositories, ensuring that changes are committed or rolled back as a single unit, preserving data integrity.
-
-### Domain Layer
-
-- **Entities**: Represent the core business objects, encapsulating the business rules and logic.
-- **IRepository Interface**: Defines the contract for data access, allowing the Application layer to interact with the data layer without being tightly coupled to specific implementations.
-- **Repositories**: Concrete implementations of the `IRepository` interface, which handle the actual data storage and retrieval.
-
-### Infrastructure Layer
-
-- **Persistence**: Manages the actual data storage and retrieval (typically using a database context like **Entity Framework Core** or similar).
-- **Repository**: Concrete implementations of the `IRepository` interface that perform data access operations.
-- **UnitOfWork**: implement IUnitOfWork of Application layer
-- **DependencyInjection**: Similar to the Application layer, this class manages the registration of infrastructure services, ensuring the Application layer can access them without direct dependencies.
-### Presentation Layer
-- **API**: This layer handles user interactions, typically through HTTP requests, and communicates with the Application layer to execute use cases.
