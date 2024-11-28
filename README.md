@@ -89,4 +89,7 @@ Here’s how the solution structure looks for a Clean Architecture implementatio
 
 - **Persistence**: Manages the actual data storage and retrieval (typically using a database context like **Entity Framework Core** or similar).
 - **Repository**: Concrete implementations of the `IRepository` interface that perform data access operations.
+- **UnitOfWork**: implement IUnitOfWork of Application layer
 - **DependencyInjection**: Similar to the Application layer, this class manages the registration of infrastructure services, ensuring the Application layer can access them without direct dependencies.
+### Presentation Layer
+- **API**: This layer handles user interactions, typically through HTTP requests, and communicates with the Application layer to execute use cases.
