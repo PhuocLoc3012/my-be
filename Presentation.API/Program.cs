@@ -24,7 +24,7 @@ namespace Presentation.API
                 .AddInfrastructureDI(builder.Configuration)
                 .AddApplicationDI()
                 ;
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
             var app = builder.Build();
