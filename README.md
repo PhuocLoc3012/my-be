@@ -5,19 +5,12 @@ This project demonstrates how to implement **Clean Architecture** in an **ASP.NE
 ## Key Layers in Clean Architecture
 
 ### 1. **Domain Layer**
-The Domain Layer contains the **core business logic** and **domain entities**. This layer is independent of external frameworks and libraries, ensuring that the business rules remain decoupled from other concerns like data access or UI.  
-It includes:
-- Entities
-- Value Objects
-- Domain Services
+-> The project that contains the domain layer, including the entities, value objects, and domain services
 
 ### 2. **Application Layer**
-The Application Layer acts as an intermediary between the Domain and Presentation layers. It contains **application services**, **data transfer objects (DTOs)**, and **business logic**. This layer:
-- References the Domain layer for business entities.
-- Does **not** reference the Infrastructure layer.
-
+→ the project that contains the application layer and implements the application services, DTOs (data transfer objects), and mappers. It should reference the **Domain** project.
 ### 3. **Infrastructure Layer**
-The Infrastructure Layer handles external concerns like data access, logging, and integration with external services. It implements interfaces defined in the Application Layer and communicates with databases and external resources.  
+ → The project contains the infrastructure layer, including the implementation of data access, logging, email, and other communication mechanisms. It should reference the **Application** project. 
 This layer includes:
 - Data Access (e.g., using Entity Framework Core)
 - Repositories
@@ -28,6 +21,7 @@ The Presentation Layer is responsible for handling **HTTP requests** and **respo
 - API Controllers
 - Middleware to manage user interactions
 - Data delivery and response formatting
+→ The main project contains the presentation layer and implements the ASP.NET Core web API. It should reference the **Application** and **Infrastructure** projects.
 
 ## Implementation Steps
 
