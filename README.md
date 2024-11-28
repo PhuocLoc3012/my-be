@@ -68,4 +68,5 @@ In the **Presentation** (Web API) project:
 ## Folder Structure
 
 Here’s how the solution structure looks for a Clean Architecture implementation in ASP.NET Core Web API:
+![Alt text](https://miro.medium.com/v2/resize:fit:500/1*sura91gPMoCjPNvZWsAO_g.png)
 
