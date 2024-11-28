@@ -1,4 +1,5 @@
-﻿using Infrastructure.Context;
+﻿using Domain.IRepository;
+using Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Infrastructure.Repositories;
+using Application;
 
 namespace Infrastructure
 {
@@ -26,7 +29,10 @@ namespace Infrastructure
 
 
             #endregion
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            #region Inject Repository
+            services.AddScoped<IUserRepository, UserRepository>();
+            #endregion
 
 
 

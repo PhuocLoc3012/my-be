@@ -7,7 +7,14 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class ApplicationUser:IdentityUser
+    public class ApplicationUser:IdentityUser<Guid>
     {
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? Address { get; set; }
+
+        public bool Gender { get; set; }
+        public string? Avatar { get; set; }
+
     }
 }

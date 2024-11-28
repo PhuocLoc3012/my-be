@@ -2,6 +2,7 @@
 
 using Application;
 using Infrastructure;
+using Infrastructure.Repositories;
 namespace Presentation.API
 
 {
@@ -23,6 +24,8 @@ namespace Presentation.API
                 .AddInfrastructureDI(builder.Configuration)
                 .AddApplicationDI()
                 ;
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
             var app = builder.Build();
 
