@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Common
 {
-    public class BaseEntity<TKey> : IEntity<TKey>
+    public interface IEntity<TypeOfKey>
     {
-        public TKey Id { get; set; }
+        public TypeOfKey Id { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set;}
         public DateTime? LastModifiedAt { get; set; }
+
     }
 }

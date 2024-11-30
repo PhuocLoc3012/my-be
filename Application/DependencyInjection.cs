@@ -14,6 +14,7 @@ namespace Application
         public static IServiceCollection AddApplicationDI(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+
             return services;
         }
     }
