@@ -17,7 +17,7 @@ namespace Application
             services.AddAutoMapper(typeof(MappingProfile).Assembly);
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
-
+         
             return services;
         }
     }

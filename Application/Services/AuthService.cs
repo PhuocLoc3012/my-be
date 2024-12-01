@@ -16,10 +16,12 @@ namespace Application.Services
     {
         private UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        public AuthService(UserManager<ApplicationUser> userManager, IMapper mapper)
+        private readonly IJwtService _jwtService;
+        public AuthService(UserManager<ApplicationUser> userManager, IMapper mapper, IJwtService jwtService)
         {
             _userManager = userManager; 
             _mapper = mapper;
+            _jwtService = jwtService;
         }
         public async Task<RegistrationResponseDto> RegisterAsync(UserRegistrationDto userRegistrationDto)
         {
@@ -32,6 +34,17 @@ namespace Application.Services
                 return new RegistrationResponseDto { IsSuccessfulRegistration = false ,Errors = errors };
             }
             return new RegistrationResponseDto { IsSuccessfulRegistration = true};
+        }
+
+        public async Task<AuthReponseDto> AuthenticateAsync(UserAuthenDto userAuthenDto)
+        {
+            var user = await _userManager.FindByNameAsync(userAuthenDto.UserName);
+            if (user is null || !await  _userManager.CheckPasswordAsync(user, userAuthenDto.Password!))
+            {
+                return new AuthReponseDto { IsAuthSuccessful = false, ErrorMessage = "Invalid Authentication" };
+            }
+            var token = _jwtService.CreateToken(user);
+            return new AuthReponseDto { IsAuthSuccessful = true, Token = token };
         }
     }
 }

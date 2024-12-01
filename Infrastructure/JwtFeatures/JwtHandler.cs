@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.IServices;
+using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.JwtFeatures
 {
-    public class JwtHandler
+    public class JwtHandler: IJwtService
     {
         private readonly IConfiguration _configuration;
         private readonly IConfigurationSection _jwtSettings;
@@ -62,6 +63,7 @@ namespace Infrastructure.JwtFeatures
                 );
             return tokenOptions;    
         }
-       
+
+
     }
 }

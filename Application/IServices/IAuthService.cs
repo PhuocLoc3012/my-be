@@ -10,5 +10,6 @@ namespace Application.IServices
     public interface IAuthService
     {
         Task<RegistrationResponseDto> RegisterAsync(UserRegistrationDto userRegistrationDto);
+        Task<AuthReponseDto> AuthenticateAsync(UserAuthenDto userAuthenDto);
     }
 }

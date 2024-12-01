@@ -27,5 +27,17 @@ namespace Presentation.API.Controllers
             var rs = await _authService.RegisterAsync(userRegistrationDto);
             return Ok(rs);
         }
+
+        [HttpPost("/authenticate")]
+        public async Task<IActionResult> Authenticate([FromBody] UserAuthenDto userAuthen)
+        {
+            if (userAuthen is null)
+            {
+                return Unauthorized();
+            }
+            var rs =  await _authService.AuthenticateAsync(userAuthen);
+            return Ok(rs);  
+        }
+
     }
 }

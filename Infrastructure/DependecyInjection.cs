@@ -13,7 +13,11 @@ using Infrastructure.Repositories;
 using Application;
 using Microsoft.Win32;
 using Infrastructure.JwtFeatures;
-
+using Domain.Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Application.IServices;
 namespace Infrastructure
 {
     public static class DependecyInjection
@@ -31,15 +35,49 @@ namespace Infrastructure
                 options.UseNpgsql(connectionString);
 
             });
-
-
             #endregion
+            #region JWT Authentication Configuration
+            var jwtSettings = configuration.GetSection("JwtSettings");
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidAudience = jwtSettings["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
+                };
+            });
+            #endregion
+
+            #region Identity Configuration
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+            #endregion
+
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             #region Inject Repository
             services.AddScoped<IUserRepository, UserRepository>();
             #endregion
 
-            services.AddSingleton<JwtHandler>();
+            services.AddScoped< IJwtService, JwtHandler>();
 
 
 
