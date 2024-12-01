@@ -1,0 +1,31 @@
+﻿using Application.Dtos.AuthDto;
+using Application.IServices;
+using Domain.Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Presentation.API.Controllers
+{
+    [Route("api/accounts]")]
+    [ApiController]
+    public class AuthController : ControllerBase
+    {
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService)
+        {
+            _authService = authService;
+        }
+        [HttpPost("/register")]
+        public async Task<IActionResult> Register([FromBody] UserRegistrationDto userRegistrationDto)
+        {
+            if (userRegistrationDto is null)
+            {
+                return BadRequest();
+            }
+            var rs = await _authService.RegisterAsync(userRegistrationDto);
+            return Ok(rs);
+        }
+    }
+}

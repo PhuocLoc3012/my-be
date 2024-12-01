@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Infrastructure.Repositories;
 using Application;
 using Microsoft.Win32;
+using Infrastructure.JwtFeatures;
 
 namespace Infrastructure
 {
@@ -38,6 +39,7 @@ namespace Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             #endregion
 
+            services.AddSingleton<JwtHandler>();
 
 
 
