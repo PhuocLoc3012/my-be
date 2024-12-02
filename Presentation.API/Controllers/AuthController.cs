@@ -2,6 +2,7 @@
 using Application.IServices;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,7 @@ namespace Presentation.API.Controllers
             _authService = authService;
         }
         [HttpPost("/register")]
+
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto userRegistrationDto)
         {
             if (userRegistrationDto is null)

@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Application.IServices;
+using System.Security.Claims;
 namespace Infrastructure
 {
     public static class DependecyInjection
@@ -36,6 +37,24 @@ namespace Infrastructure
 
             });
             #endregion
+
+            #region Identity Configuration
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+            #endregion
+
+
+
+
+
             #region JWT Authentication Configuration
             var jwtSettings = configuration.GetSection("JwtSettings");
             services.AddAuthentication(options =>
@@ -53,23 +72,33 @@ namespace Infrastructure
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtSettings["Issuer"],
                     ValidAudience = jwtSettings["Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"])),
+                    //RoleClaimType = ClaimTypes.Role // Ensures roles are recognized
+                };
+                // Thêm event handlers để debug
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        Console.WriteLine("Token validated successfully");
+                        return Task.CompletedTask;
+                    }
                 };
             });
             #endregion
 
-            #region Identity Configuration
-            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            services.AddAuthorization(options =>
             {
-                options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireDigit = false;
-            })
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
-            #endregion
+                options.AddPolicy("OnlyAdminUsers",
+                    policy => policy.RequireRole("Admin"));
+            });
+
+
 
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -80,6 +109,15 @@ namespace Infrastructure
             services.AddScoped< IJwtService, JwtHandler>();
 
 
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAll", builder =>
+            //    {
+            //        builder.AllowAnyOrigin()
+            //               .AllowAnyMethod()
+            //               .AllowAnyHeader();
+            //    });
+            //});
 
 
 

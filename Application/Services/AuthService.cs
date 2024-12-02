@@ -33,6 +33,7 @@ namespace Application.Services
                 var errors = rs.Errors.Select(e => e.Description).ToList();
                 return new RegistrationResponseDto { IsSuccessfulRegistration = false ,Errors = errors };
             }
+            await _userManager.AddToRoleAsync(user, "Customer");
             return new RegistrationResponseDto { IsSuccessfulRegistration = true};
         }
 
@@ -43,7 +44,9 @@ namespace Application.Services
             {
                 return new AuthReponseDto { IsAuthSuccessful = false, ErrorMessage = "Invalid Authentication" };
             }
-            var token = _jwtService.CreateToken(user);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var token = _jwtService.CreateToken(user, roles);
             return new AuthReponseDto { IsAuthSuccessful = true, Token = token };
         }
     }
