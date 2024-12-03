@@ -4,7 +4,7 @@ using Application;
 using Application.Mappers;
 using Domain.Entities;
 using Infrastructure;
-using Infrastructure.Context;
+
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

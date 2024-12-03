@@ -1,5 +1,4 @@
 ﻿using Domain.IRepository;
-using Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +18,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Application.IServices;
 using System.Security.Claims;
+using Infrastructure.Persistence.Context;
+using Infrastructure.Email;
+
+using FluentEmail.Smtp;
+using System.Net.Mail;
 namespace Infrastructure
 {
     public static class DependecyInjection
@@ -99,6 +103,21 @@ namespace Infrastructure
             });
 
 
+            //var emailConfig = configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            //services.AddSingleton(emailConfig);
+
+            // Load SMTP settings from configuration
+            var smtpSettings = configuration.GetSection("SmtpSettings").Get<SmtpSettings>();
+
+            services.AddFluentEmail(smtpSettings.FromEmail, smtpSettings.FromName)
+            .AddRazorRenderer()
+            .AddSmtpSender(new SmtpClient(smtpSettings.Host)
+            {
+                Port = smtpSettings.Port,
+                Credentials = new System.Net.NetworkCredential(smtpSettings.UserName,
+            smtpSettings.Password),
+                EnableSsl = true,
+            });
 
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -107,7 +126,7 @@ namespace Infrastructure
             #endregion
 
             services.AddScoped< IJwtService, JwtHandler>();
-
+            services.AddScoped<IEmailSender, EmailSender>();
 
             //services.AddCors(options =>
             //{

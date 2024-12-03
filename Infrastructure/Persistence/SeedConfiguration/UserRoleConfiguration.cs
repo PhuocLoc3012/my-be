@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.SeedConfiguration
+namespace Infrastructure.Persistence.SeedConfiguration
 {
     public class UserRoleConfiguration : IEntityTypeConfiguration<IdentityUserRole<Guid>>
     {

@@ -3,6 +3,7 @@ using Application.IServices;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,16 @@ namespace Application.Services
                 var errors = rs.Errors.Select(e => e.Description).ToList();
                 return new RegistrationResponseDto { IsSuccessfulRegistration = false ,Errors = errors };
             }
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var param = new Dictionary<string, string?>
+            {
+                { "token", token},
+                { "email", user.Email }
+            };
+            var callBack = QueryHelpers.AddQueryString(userRegistrationDto.ClientUri!, param);
+            
+            
             await _userManager.AddToRoleAsync(user, "Customer");
             return new RegistrationResponseDto { IsSuccessfulRegistration = true};
         }
@@ -43,6 +54,10 @@ namespace Application.Services
             if (user is null || !await  _userManager.CheckPasswordAsync(user, userAuthenDto.Password!))
             {
                 return new AuthReponseDto { IsAuthSuccessful = false, ErrorMessage = "Invalid Authentication" };
+            }
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                return new AuthReponseDto { ErrorMessage = "Email is not confirmed" };
             }
             var roles = await _userManager.GetRolesAsync(user);
 

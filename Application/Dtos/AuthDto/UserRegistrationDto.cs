@@ -22,5 +22,6 @@ namespace Application.Dtos.AuthDto
 
         public bool Gender { get; set; }
         public string? Avatar { get; set; }
+        public string? ClientUri { get; set; }
     }
 }
