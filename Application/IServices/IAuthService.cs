@@ -11,5 +11,6 @@ namespace Application.IServices
     {
         Task<RegistrationResponseDto> RegisterAsync(UserRegistrationDto userRegistrationDto);
         Task<AuthReponseDto> AuthenticateAsync(UserAuthenDto userAuthenDto);
+        Task EmailConfirmationAsync(string email, string token);
     }
 }

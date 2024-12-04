@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.API.Controllers
 {
-    [Route("api/accounts]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -18,8 +18,8 @@ namespace Presentation.API.Controllers
         {
             _authService = authService;
         }
-        [HttpPost("/register")]
 
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDto userRegistrationDto)
         {
             if (userRegistrationDto is null)
@@ -30,7 +30,7 @@ namespace Presentation.API.Controllers
             return Ok(rs);
         }
 
-        [HttpPost("/authenticate")]
+        [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] UserAuthenDto userAuthen)
         {
             if (userAuthen is null)
@@ -39,6 +39,13 @@ namespace Presentation.API.Controllers
             }
             var rs =  await _authService.AuthenticateAsync(userAuthen);
             return Ok(rs);  
+        }
+
+        [HttpGet("emailconfirmation")]
+        public async Task<IActionResult> EmailConfirmation([FromQuery] string email, [FromQuery] string token)
+        {
+            await _authService.EmailConfirmationAsync(email, token);
+            return Ok();
         }
 
     }

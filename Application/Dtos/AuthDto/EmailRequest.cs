@@ -13,6 +13,11 @@ namespace Application.Dtos.AuthDto
         public string Subject { get; set; }
         public string Body { get; set; }
 
-
+        public EmailRequest(string toEmail, string subject, string body)
+        {
+            ToEmail = toEmail;  
+            Subject = subject;
+            Body = body;
+        }
     }
 }
