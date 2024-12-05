@@ -66,7 +66,8 @@ namespace Application.Services
             }
             var roles = await _userManager.GetRolesAsync(user);
 
-            var token = _jwtService.GenerateToken(user, roles);
+            var token =  _jwtService.CreateToken(user, roles, true);
+            await _userManager.UpdateAsync(user);
             return new AuthReponseDto { IsAuthSuccessful = true, Token = token };
         }
 
@@ -96,6 +97,20 @@ namespace Application.Services
                 // If other errors, throw a general exception
                 throw new BadRequestException("Invalid email confirmation request");
             }
+        }
+
+        public async Task<TokenDto> RefreshTokenAsync(TokenDto tokenDto)
+        {
+            var principal = _jwtService.GetPrincipalFromExpiredToken(tokenDto.AccessToken);
+            var user = await _userManager.FindByNameAsync(principal.Identity.Name);
+            var roles = await _userManager.GetRolesAsync(user);
+            if (user is null || user.RefreshToken != tokenDto.RefreshToken || user
+                .RefreshTokenExpiryTime <=  DateTime.Now)
+            {
+                throw new RefreshTokenBadRequest("RefreshToken is invalid");
+            }
+            return _jwtService.CreateToken(user, roles, false);
+
         }
     }
 }

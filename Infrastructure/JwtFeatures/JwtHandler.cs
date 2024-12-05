@@ -1,5 +1,7 @@
-﻿using Application.IServices;
+﻿using Application.Dtos.AuthDto;
+using Application.IServices;
 using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -24,12 +26,21 @@ namespace Infrastructure.JwtFeatures
         }
 
 
-        public string GenerateToken(ApplicationUser user, IList<string> roles)
+        public  TokenDto CreateToken(ApplicationUser user, IList<string> roles, bool populateExp)
         {
+           
             var signingCredentials = GetSigningCredentials();
             var claims = GetClaims(user, roles);
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
-            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            if (populateExp)
+            {
+                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(Convert.ToDouble(_jwtSettings["RefreshTokenExpirationDays"]));
+            }
+            
+            var accessToken =  new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+            return new TokenDto(accessToken, refreshToken);
         }
 
 
@@ -55,7 +66,7 @@ namespace Infrastructure.JwtFeatures
         } 
 
 
-        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
+        public JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
         {
             var tokenOptions = new JwtSecurityToken(
                 issuer: _jwtSettings["Issuer"],
@@ -77,6 +88,28 @@ namespace Infrastructure.JwtFeatures
             }
         }
 
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = false,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = _jwtSettings["Issuer"],
+                ValidAudience = _jwtSettings["Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings["SecretKey"])),
+            };
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters,out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken is null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("Invalid Token");
+            }
+            return principal;
+        }
 
     }
 }

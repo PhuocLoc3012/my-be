@@ -48,5 +48,12 @@ namespace Presentation.API.Controllers
             return Ok();
         }
 
+        [HttpPost("refreshtoken")]
+
+        public async Task<IActionResult> RefreshToken([FromBody] TokenDto tokenDto)
+        {
+            var rs = await _authService.RefreshTokenAsync(tokenDto);
+            return Ok(rs);
+        }
     }
 }
