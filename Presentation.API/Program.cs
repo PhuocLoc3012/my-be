@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Presentation.API.Middleware;
 using System.Text;
 namespace Presentation.API
 
@@ -77,6 +78,8 @@ namespace Presentation.API
 
             var app = builder.Build();
 
+            //app.UseMiddleware<ExceptionMiddleware>();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -85,6 +88,7 @@ namespace Presentation.API
             }
 
             //  app.MapIdentityApi<ApplicationUser>();
+
 
             app.UseHttpsRedirection();
             // Thêm CORS configuration

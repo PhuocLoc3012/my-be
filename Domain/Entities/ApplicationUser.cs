@@ -15,6 +15,7 @@ namespace Domain.Entities
 
         public bool Gender { get; set; }
         public string? Avatar { get; set; }
-
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
     }
 }

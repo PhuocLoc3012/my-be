@@ -24,7 +24,7 @@ namespace Infrastructure.JwtFeatures
         }
 
 
-        public string CreateToken(ApplicationUser user, IList<string> roles)
+        public string GenerateToken(ApplicationUser user, IList<string> roles)
         {
             var signingCredentials = GetSigningCredentials();
             var claims = GetClaims(user, roles);
@@ -61,10 +61,20 @@ namespace Infrastructure.JwtFeatures
                 issuer: _jwtSettings["Issuer"],
                 audience: _jwtSettings["Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings["ExpiryMinutes"])),
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_jwtSettings["AccessTokenExpirationMinutes"])),
                 signingCredentials: signingCredentials
                 );
             return tokenOptions;    
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
 
 

@@ -21,7 +21,7 @@ namespace Presentation.API.Controllers
         public IActionResult TestAction() => Ok("TEST MESSAGE");
 
         [HttpGet("ping")]  // Thêm endpoint test
-        public IActionResult Ping() => Ok("pong");
+        public IActionResult Ping() => Ok("PONG");
 
         [HttpPost("SendMail")]
         public async Task<IActionResult> SendMail([FromBody] EmailRequest emailRequest)

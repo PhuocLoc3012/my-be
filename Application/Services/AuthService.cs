@@ -1,4 +1,5 @@
-﻿using Application.Dtos.AuthDto;
+﻿using Application.Common.Exceptions;
+using Application.Dtos.AuthDto;
 using Application.IServices;
 using AutoMapper;
 using Domain.Entities;
@@ -53,18 +54,19 @@ namespace Application.Services
 
         public async Task<AuthReponseDto> AuthenticateAsync(UserAuthenDto userAuthenDto)
         {
+           
             var user = await _userManager.FindByNameAsync(userAuthenDto.UserName);
             if (user is null || !await  _userManager.CheckPasswordAsync(user, userAuthenDto.Password!))
             {
-                return new AuthReponseDto { IsAuthSuccessful = false, ErrorMessage = "Invalid Authentication" };
+                throw new BadRequestException("Invalid authentication");
             }
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
-                return new AuthReponseDto { ErrorMessage = "Email is not confirmed" };
+                throw new BadRequestException("Email is not confirmed");
             }
             var roles = await _userManager.GetRolesAsync(user);
 
-            var token = _jwtService.CreateToken(user, roles);
+            var token = _jwtService.GenerateToken(user, roles);
             return new AuthReponseDto { IsAuthSuccessful = true, Token = token };
         }
 
@@ -73,7 +75,7 @@ namespace Application.Services
             var user = await _userManager.FindByEmailAsync(email);
             if (user is null)
             {
-                throw new Exception("User not found - Invalid email confirmation request");
+                throw new NotFoundException("User not found - Invalid email confirmation request");
             }
             var confirmResult = await _userManager.ConfirmEmailAsync(user, token);
             if (!confirmResult.Succeeded)
@@ -92,7 +94,7 @@ namespace Application.Services
                 }
 
                 // If other errors, throw a general exception
-                throw new Exception("Invalid email confirmation request");
+                throw new BadRequestException("Invalid email confirmation request");
             }
         }
     }

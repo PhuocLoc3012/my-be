@@ -9,6 +9,6 @@ namespace Application.IServices
 {
     public interface IJwtService
     {
-        public string CreateToken (ApplicationUser user, IList<string> roles);
+        public string GenerateToken(ApplicationUser user, IList<string> roles);
     }
 }
