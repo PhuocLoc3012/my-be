@@ -13,5 +13,7 @@ namespace Application.IServices
         Task<AuthReponseDto> AuthenticateAsync(UserAuthenDto userAuthenDto);
         Task EmailConfirmationAsync(string email, string token);
         Task<TokenDto> RefreshTokenAsync(TokenDto token);
+        Task ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto);
+        Task ResetPasswordAsync(ResetPasswordDto resetPasswordDto);
     }
 }

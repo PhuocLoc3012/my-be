@@ -49,7 +49,6 @@ namespace Presentation.API.Middleware
             {
                 StatusCode = httpContext.Response.StatusCode,
                 Message = ex.Message,
-               // Detailed = ex.InnerException?.Message
             }.ToString());
         }
 

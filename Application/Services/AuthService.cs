@@ -31,7 +31,7 @@ namespace Application.Services
         {
             
             var user = _mapper.Map<ApplicationUser>(userRegistrationDto);
-            var rs = await _userManager.CreateAsync(user, userRegistrationDto.Password);
+            var rs = await _userManager.CreateAsync(user, userRegistrationDto.Password!);
             if (!rs.Succeeded)
             {
                 var errors = rs.Errors.Select(e => e.Description).ToList();
@@ -42,11 +42,11 @@ namespace Application.Services
             var param = new Dictionary<string, string?>
             {
                 { "token", token},
-                { "email", user.Email }
+                { "email", user.Email}
             };
             var callBack = QueryHelpers.AddQueryString(userRegistrationDto.ClientUri!, param);
  
-            await _emailSender.SendEmailAsync(user.Email, "Email Confirmation", callBack);
+            await _emailSender.SendEmailAsync(user.Email!, "Email Confirmation", callBack);
             
             await _userManager.AddToRoleAsync(user, "Customer");
             return new RegistrationResponseDto { IsSuccessfulRegistration = true};
@@ -54,11 +54,10 @@ namespace Application.Services
 
         public async Task<AuthReponseDto> AuthenticateAsync(UserAuthenDto userAuthenDto)
         {
-           
-            var user = await _userManager.FindByNameAsync(userAuthenDto.UserName);
+            var user = await _userManager.FindByNameAsync(userAuthenDto.UserName!);
             if (user is null || !await  _userManager.CheckPasswordAsync(user, userAuthenDto.Password!))
             {
-                throw new BadRequestException("Invalid authentication");
+                throw new BadRequestException("Invalid Username or Password!");
             }
             if (!await _userManager.IsEmailConfirmedAsync(user))
             {
@@ -111,6 +110,41 @@ namespace Application.Services
             }
             return _jwtService.CreateToken(user, roles, false);
 
+        }
+
+        public async Task ForgotPasswordAsync(ForgotPasswordDto forgotPasswordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email!);
+            if (user is null)
+            {
+                throw new BadRequestException("Email is not exist");
+            }
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var param = new Dictionary<string, string?>
+            {
+                {"token", token},
+                {"email", forgotPasswordDto.Email}
+            };
+            var callBack = QueryHelpers.AddQueryString(forgotPasswordDto.ClientUri!, param);
+
+            await _emailSender.SendEmailAsync(user.Email!, "Reset password token", callBack);
+        }
+
+        public async Task ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email!);
+            if(user is null)
+            {
+                throw new BadRequestException("Email is not exist");
+            }
+            var rs = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token!, resetPasswordDto.Password!);
+            if (!rs.Succeeded)
+            {
+                var errors = rs.Errors.Select(err => err.Description);
+                // Join the errors into a single string
+                var errorMessage = string.Join(", ", errors);
+                throw new BadRequestException(errorMessage.ToString());
+            }
         }
     }
 }

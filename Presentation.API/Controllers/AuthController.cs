@@ -55,5 +55,27 @@ namespace Presentation.API.Controllers
             var rs = await _authService.RefreshTokenAsync(tokenDto);
             return Ok(rs);
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody]  ForgotPasswordDto forgotPassword)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            await _authService.ForgotPasswordAsync(forgotPassword);
+            return Ok();
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto forgotPassword)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            await _authService.ResetPasswordAsync(forgotPassword);
+            return Ok();
+        }
     }
 }
