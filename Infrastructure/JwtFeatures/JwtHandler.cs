@@ -42,7 +42,7 @@ namespace Infrastructure.JwtFeatures
             var accessToken =  new JwtSecurityTokenHandler().WriteToken(tokenOptions);
             return new TokenDto(accessToken, refreshToken);
         }
-
+        
 
 
 
@@ -57,7 +57,8 @@ namespace Infrastructure.JwtFeatures
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName)
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             };
             foreach (var role in roles) {
                 claims.Add(new Claim(ClaimTypes.Role, role));

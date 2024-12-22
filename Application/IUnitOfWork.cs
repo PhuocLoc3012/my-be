@@ -9,7 +9,8 @@ namespace Application
 {
     public interface IUnitOfWork : IDisposable
     {
-        public IUserRepository _userRepository { get; }
+        public IUserRepository UserRepository { get; }
+  
         Task<int> SaveChangesAsync();
     }
 }

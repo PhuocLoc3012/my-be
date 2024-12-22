@@ -77,5 +77,6 @@ namespace Presentation.API.Controllers
             await _authService.ResetPasswordAsync(forgotPassword);
             return Ok();
         }
+
     }
 }

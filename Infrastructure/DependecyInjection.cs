@@ -23,6 +23,7 @@ using Infrastructure.Email;
 
 using FluentEmail.Smtp;
 using System.Net.Mail;
+using Infrastructure.Services;
 namespace Infrastructure
 {
     public static class DependecyInjection
@@ -121,6 +122,10 @@ namespace Infrastructure
             });
 
 
+            services.AddHttpContextAccessor();
+
+
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             #region Inject Repository
             services.AddScoped<IUserRepository, UserRepository>();
@@ -128,7 +133,8 @@ namespace Infrastructure
 
             services.AddScoped< IJwtService, JwtHandler>();
             services.AddScoped<IEmailSender, EmailSender>();
-
+            services.AddScoped<IClaimService, ClaimService>();
+       
             //services.AddCors(options =>
             //{
             //    options.AddPolicy("AllowAll", builder =>

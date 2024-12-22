@@ -75,7 +75,7 @@ namespace Presentation.API
 
 
             //builder.Services.AddAuthorization();
-
+            builder.Services.AddHttpContextAccessor();
             var app = builder.Build();
 
             app.UseMiddleware<ExceptionMiddleware>();

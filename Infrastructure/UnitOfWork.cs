@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories
             _userRepository = userRepository;
         }
 
-
+        public IUserRepository UserRepository => _userRepository;
 
         public async Task<int> SaveChangesAsync()
         {

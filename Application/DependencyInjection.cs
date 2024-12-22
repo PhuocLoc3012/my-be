@@ -14,10 +14,12 @@ namespace Application
     {
         public static IServiceCollection AddApplicationDI(this IServiceCollection services)
         {
+
             services.AddAutoMapper(typeof(MappingProfile).Assembly);
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
-         
+
+
             return services;
         }
     }
